@@ -1,8 +1,6 @@
 defmodule ExConstructorTest do
-  use ExUnit.Case
+  use ExSpec, async: true
   doctest ExConstructor
-
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
+  doctest ExConstructor.Utils
 end
+
