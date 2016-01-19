@@ -14,6 +14,7 @@ defmodule ExConstructor.Mixfile do
        links: %{GitHub: "https://github.com/appcues/exconstructor"}
      ],
      docs: [main: ExConstructor],
+     test_coverage: [tool: ExCoveralls],
      deps: deps]
   end
 
