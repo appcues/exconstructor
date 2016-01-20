@@ -20,7 +20,7 @@ defmodule TestStruct do
   defstruct field_one: nil,
             field_two: nil,
             field_three: nil,
-            field_four: nil,
+            field_four: nil
   ExConstructor.define_constructor
 end
 
