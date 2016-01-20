@@ -17,12 +17,11 @@ move on to the interesting parts of your program.
 
 ```elixir
 defmodule TestStruct do
-  import ExConstructor
   defstruct field_one: nil,
             field_two: nil,
             field_three: nil,
             field_four: nil,
-  define_constructor
+  ExConstructor.define_constructor
 end
 
 TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
