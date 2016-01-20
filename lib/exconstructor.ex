@@ -27,17 +27,16 @@ defmodule ExConstructor do
 
   Example:
 
-      iex(1)> defmodule TestStruct do
-      ...(1)>   import ExConstructor
-      ...(1)>   defstruct field_one: 1,
-      ...(1)>             field_two: 2,
-      ...(1)>             field_three: 3,
-      ...(1)>             field_four: 4,
-      ...(1)>             field_five: 5
-      ...(1)>   define_constructor
-      ...(1)> end
-      iex(2)> TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
-      %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d", field_five: 5}
+      defmodule TestStruct do
+        defstruct field_one: 1,
+                  field_two: 2,
+                  field_three: 3,
+                  field_four: 4,
+        ExConstructor.define_constructor
+      end
+
+      TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
+      # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
 
   ## Authorship and License
 
@@ -59,7 +58,7 @@ defmodule ExConstructor do
         map = Map.new(map_or_dict)
         keys = default |> Map.from_struct |> Map.keys
         Enum.reduce keys, default, fn (atom, acc) ->
-          str = to_string(k)
+          str = to_string(atom)
           under_str = Mix.Utils.underscore(str)
           camel_str = Mix.Utils.camelize(str) |> ExConstructor.Utils.lcfirst
           under_atom = String.to_atom(under_str)
@@ -83,8 +82,8 @@ defmodule ExConstructor do
     @doc ~s"""
     Returns a copy of `str` with the first character lowercased.
 
-        iex> ExConstructor.Utils.lcfirst("OmgThisIsCool")
-        "omgThisIsCool"
+        iex> ExConstructor.Utils.lcfirst("Adam's Mom")
+        "adam's Mom"
     """
     def lcfirst(str) do
       first = String.slice(str, 0..0) |> String.downcase

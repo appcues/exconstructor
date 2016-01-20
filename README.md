@@ -13,6 +13,21 @@ handles map-vs-dict, string-vs-atom, and camelCase-vs-under_score
 input data issues automatically, DRYing up your code and letting you
 move on to the interesting parts of your program.
 
+## Example
+
+```elixir
+defmodule TestStruct do
+  import ExConstructor
+  defstruct field_one: nil,
+            field_two: nil,
+            field_three: nil,
+            field_four: nil,
+  define_constructor
+end
+
+TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
+# => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
+```
 
 ## [Full Documentation](http://hexdocs.pm/exconstructor/ExConstructor.html)
 
