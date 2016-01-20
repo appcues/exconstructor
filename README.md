@@ -9,7 +9,7 @@ structs from external data, such as that emitted by a JSON parser.
 
 ExConstructor provides a `define_constructor` macro which can be invoked
 from a struct module.  The generated constructor, called `new` by default,
-handles map-vs-dict, string-vs-atom, and camelCase-vs-under_score
+handles map-vs-keyword-list, string-vs-atom, and camelCase-vs-under_score
 input data issues automatically, DRYing up your code and letting you
 move on to the interesting parts of your program.
 

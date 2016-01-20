@@ -4,7 +4,7 @@ defmodule ExConstructor.Mixfile do
   def project do
     [app: :exconstructor,
      description: "ExConstructor is a helper for instantiating structs from external data.",
-     version: "0.1.1",
+     version: "0.1.2",
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,

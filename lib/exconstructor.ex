@@ -5,7 +5,7 @@ defmodule ExConstructor do
 
   ExConstructor provides a `define_constructor` macro which can be invoked
   from a struct module.  The generated constructor, called `new` by default,
-  handles map-vs-dict, string-vs-atom, and camelCase-vs-under_score
+  handles map-vs-keyword-list, string-vs-atom, and camelCase-vs-under_score
   input data issues automatically, DRYing up your code and letting you
   move on to the interesting parts of your program.
 
@@ -43,19 +43,19 @@ defmodule ExConstructor do
   ExConstructor is copyright 2016 Appcues, Inc.
 
   ExConstructor is released under the
-  [MIT License](https://github.com/appcues/exsentry/blob/master/LICENSE.txt).
+  [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
   """
 
   @doc ~S"""
   Defines a constructor for the struct defined in the module in which this
-  macro was invoked.  This constructor accepts a map or dict of keys and values.
+  macro was invoked.  This constructor accepts a map or keyword list of
+  keys and values.
   Keys may be strings or atoms, in camelCase or under_score format.
   """
   defmacro define_constructor(function_name \\ :new) do
     quote do
-      def unquote(function_name)(map_or_dict, opts \\ []) do
+      def unquote(function_name)(%{}=map, opts) do
         default = %__MODULE__{}
-        map = Map.new(map_or_dict)
         keys = default |> Map.from_struct |> Map.keys
         Enum.reduce keys, default, fn (atom, acc) ->
           str = to_string(atom)
@@ -75,7 +75,16 @@ defmodule ExConstructor do
           Map.put(acc, atom, value)
         end
       end
-    end
+
+      def unquote(function_name)(kwlist, opts) when is_list(kwlist) do
+        map = Enum.reduce(kwlist, %{}, fn ({k,v}, acc) -> Map.put(acc, k, v) end)
+        unquote(function_name)(map, opts)
+      end
+
+      def unquote(function_name)(map_or_kwlist) do
+        unquote(function_name)(map_or_kwlist, [])
+      end
+    end # quote do
   end
 
   defmodule Utils do
