@@ -4,7 +4,7 @@
 [![Hex.pm Version](http://img.shields.io/hexpm/v/exconstructor.svg?style=flat)](https://hex.pm/packages/exconstructor)
 [![Coverage Status](https://coveralls.io/repos/github/appcues/exconstructor/badge.svg?branch=master)](https://coveralls.io/github/appcues/exconstructor?branch=master)
 
-ExConstructor is an Elixir library which makes it easier to instantiate
+ExConstructor is an Elixir library which makes it easy to instantiate
 structs from external data, such as that emitted by a JSON parser.
 
 ExConstructor provides a `define_constructor` macro which can be invoked
