@@ -45,5 +45,7 @@ build:
             --branch master \
             --message "$MESSAGE" \
             --committer "$COMMITTER" \
-            --sha "$SHA"
+            --sha "$SHA" \
+          || echo "coveralls is broken"
+
 
