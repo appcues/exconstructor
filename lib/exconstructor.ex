@@ -32,7 +32,7 @@ defmodule ExConstructor do
                   field_two: 2,
                   field_three: 3,
                   field_four: 4,
-        ExConstructor.define_constructor
+        use ExConstructor
       end
 
       TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
@@ -49,7 +49,8 @@ defmodule ExConstructor do
   @doc ~S"""
   Defines a constructor for the struct defined in the module in which this
   macro was invoked.  This constructor accepts a map or keyword list of
-  keys and values.
+  keys and values, as well as an optional `opts` keyword list (currently
+  ignored).
   Keys may be strings or atoms, in camelCase or under_score format.
   """
   defmacro define_constructor(function_name \\ :new) do
@@ -85,6 +86,13 @@ defmodule ExConstructor do
         unquote(function_name)(map_or_kwlist, [])
       end
     end # quote do
+  end
+
+  defmacro __using__(opts) do
+    function_name = if is_atom(opts), do: opts, else: opts[:name] || :new
+    quote do
+      ExConstructor.define_constructor(unquote(function_name))
+    end
   end
 
   defmodule Utils do

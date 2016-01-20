@@ -21,7 +21,7 @@ defmodule TestStruct do
             field_two: nil,
             field_three: nil,
             field_four: nil
-  ExConstructor.define_constructor
+  use ExConstructor
 end
 
 TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})

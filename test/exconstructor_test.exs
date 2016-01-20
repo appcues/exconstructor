@@ -33,5 +33,42 @@ defmodule ExConstructorTest do
       end
     end
   end
+
+
+  defmodule TestStruct2 do
+    defstruct field: nil
+    use ExConstructor
+  end
+
+  defmodule TestStruct3 do
+    defstruct field: nil
+    use ExConstructor, :make
+  end
+
+  defmodule TestStruct4 do
+    defstruct field: nil
+    use ExConstructor, name: :build
+  end
+
+  describe "invocation styles" do
+    describe "use ExConstructor" do
+      it "uses the default constructor name" do
+        assert(nil != TestStruct2.new(%{}))
+      end
+    end
+
+    describe "use ExConstructor, :function_name" do
+      it "uses the given constructor name" do
+        assert(nil != TestStruct3.make(%{}))
+      end
+    end
+
+    describe "use ExConstructor, name: :function_name" do
+      it "uses the given constructor name" do
+        assert(nil != TestStruct4.build(%{}))
+      end
+    end
+  end
+
 end
 

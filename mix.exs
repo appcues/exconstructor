@@ -3,19 +3,31 @@ defmodule ExConstructor.Mixfile do
 
   def project do
     [app: :exconstructor,
-     description: "ExConstructor is a helper for instantiating structs from external data.",
-     version: "0.1.2",
+     version: "0.2.0",
+     description: description,
+     package: package,
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     package: [
-       maintainers: ["pete gamache", "Appcues"],
-       licenses: ["MIT"],
-       links: %{GitHub: "https://github.com/appcues/exconstructor"}
-     ],
      docs: [main: ExConstructor],
      test_coverage: [tool: ExCoveralls],
      deps: deps]
+  end
+
+  def description do
+    ~S"""
+    ExConstructor generates constructor functions for your structs, handling
+    map-vs-keyword-list, string-vs-atom-keys, and camelCase-vs-under_score
+    issues automatically.
+    """
+  end
+
+  def package do
+    [
+      maintainers: ["pete gamache", "Appcues"],
+      licenses: ["MIT"],
+      links: %{GitHub: "https://github.com/appcues/exconstructor"}
+    ]
   end
 
   def application do
