@@ -57,13 +57,13 @@ defmodule ExConstructorTest do
       end
     end
 
-    describe "use ExConstructor, :function_name" do
+    describe "use ExConstructor, :constructor_name" do
       it "uses the given constructor name" do
         assert(nil != TestStruct3.make(%{}))
       end
     end
 
-    describe "use ExConstructor, name: :function_name" do
+    describe "use ExConstructor, name: :constructor_name" do
       it "uses the given constructor name" do
         assert(nil != TestStruct4.build(%{}))
       end
