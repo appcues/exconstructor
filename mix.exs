@@ -10,7 +10,8 @@ defmodule ExConstructor.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      docs: [main: ExConstructor],
-     test_coverage: [tool: Coverex.Task, coveralls: true],
+     test_coverage: [tool: ExCoveralls],
+     #test_coverage: [tool: Coverex.Task, coveralls: true],
      deps: deps]
   end
 
