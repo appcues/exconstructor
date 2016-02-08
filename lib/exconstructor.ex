@@ -1,9 +1,9 @@
 defmodule ExConstructor do
   @moduledoc ~s"""
-  ExConstructor is an Elixir library which makes it easier to instantiate
+  ExConstructor is an Elixir library which makes it easy to instantiate
   structs from external data, such as that emitted by a JSON parser.
 
-  Simply call `use ExConstructor` after a `defstruct` statement to inject
+  Add `use ExConstructor` after a `defstruct` statement to inject
   a constructor function into the module.
   The generated constructor, called `new` by default,
   handles map-vs-keyword-list, string-vs-atom, and camelCase-vs-under_score
@@ -47,6 +47,7 @@ defmodule ExConstructor do
   [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
   """
 
+  @type map_or_kwlist :: %{String.t => any}|%{atom => any}|[{String.t, any}]|[{atom, any}]
 
   defmodule Options do
     @moduledoc ~S"""
@@ -62,41 +63,64 @@ defmodule ExConstructor do
 
   @doc ~S"""
   Defines a constructor for the struct defined in the module in which this
-  macro was invoked.  This constructor accepts a map or keyword list of
-  keys and values, as well as an optional `opts` keyword list (currently
-  ignored).
-  Keys may be strings or atoms, in camelCase or under_score format.
+  macro was invoked.  If `name_or_opts` is an atom, it will be used as
+  the constructor name, otherwise `name_or_opts[:name]` or default `:new`
+  is used.
+  Additional options in `name_or_opts` are stored in the
+  `@exconstructor_default_options` module attribute.
+
+  This constructor is implemented in terms of [ExConstructor.populate_struct/3],
+  and accepts a map or keyword list of keys and values and an optional
+  `opts` keyword list.
+
+  The constructor's definition looks like:
+
+      @spec new(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
+      def new(map_or_kwlist, opts \\ []) do
+        ExConstructor.populate_struct(%__MODULE__{}, map_or_kwlist, Dict.merge(@exconstructor_default_options, opts))
+      end
+
+  Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
+  under_score format.
   """
-  defmacro __using__(constructor_name_or_opts \\ :new) do
+  defmacro __using__(name_or_opts \\ :new) do
     opts = cond do
-             is_atom(constructor_name_or_opts) -> [name: constructor_name_or_opts]
-             is_list(constructor_name_or_opts) -> constructor_name_or_opts
+             is_atom(name_or_opts) -> [name: name_or_opts]
+             is_list(name_or_opts) -> name_or_opts
              true -> raise "argument must be atom (constructor name) or keyword list (opts)"
            end
     constructor_name = opts[:name] || :new
 
     quote do
+      @exconstructor_default_options unquote(opts)
+      @spec unquote(constructor_name)(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
       def unquote(constructor_name)(map_or_kwlist, opts \\ []) do
         ExConstructor.populate_struct(
           %__MODULE__{},
           map_or_kwlist,
-          Dict.merge(unquote(opts), opts)
+          Dict.merge(@exconstructor_default_options, opts)
         )
       end
     end
   end
 
-  defmacro define_constructor(constructor_name_or_opts \\ :new) do
-    quote do
-      ExConstructor.__using__(unquote(constructor_name_or_opts))
-    end
+  @doc "Alias for `__using__`, for those who prefer an explicit invocation."
+  defmacro define_constructor(name_or_opts \\ :new) do
+    quote do: ExConstructor.__using__(unquote(name_or_opts))
   end
 
   @doc ~S"""
   Returns a copy of `struct` into which the values in `map_or_kwlist`
-  have been applied.  `opts` determines whether to allow string keys,
-  atom keys, camelcase keys, or underscore keys; all default to `true`.
+  have been applied.
+
+  Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
+  under_score format.
+
+  `opts` may contain keys `strings`, `atoms`, `camelcase` and `underscore`.
+  Set these keys false to prevent testing of that key format in
+  `map_or_kwlist`.  All default to `true`.
   """
+  @spec populate_struct(struct, map_or_kwlist, %Options{}) :: struct
   def populate_struct(struct, map_or_kwlist, %Options{}=opts) do
     map = cond do
             is_map(map_or_kwlist) -> map_or_kwlist
@@ -106,8 +130,8 @@ defmodule ExConstructor do
     keys = struct |> Map.from_struct |> Map.keys
     Enum.reduce keys, struct, fn (atom, acc) ->
       str = to_string(atom)
-      under_str = Mix.Utils.underscore(str)
-      camel_str = Mix.Utils.camelize(str) |> ExConstructor.Utils.lcfirst
+      under_str = Macro.underscore(str)
+      camel_str = Macro.camelize(str) |> lcfirst
       under_atom = String.to_atom(under_str)
       camel_atom = String.to_atom(camel_str)
       value = cond do
@@ -130,26 +154,31 @@ defmodule ExConstructor do
     end
   end
 
-  def populate_struct(default, map, opts) do
+  @spec populate_struct(struct, map_or_kwlist, map_or_kwlist) :: struct
+  def populate_struct(default, map_or_kwlist, opts) do
     opts_struct = populate_struct(%Options{}, opts, %Options{})
-    populate_struct(default, map, opts_struct)
+    populate_struct(default, map_or_kwlist, opts_struct)
+  end
+
+  @doc ~S"""
+  Returns a copy of `struct` into which the values in `map_or_kwlist`
+  have been applied.
+
+  Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
+  under_score format.
+  """
+  @spec populate_struct(struct, map_or_kwlist) :: struct
+  def populate_struct(default, map_or_kwlist) do
+    populate_struct(default, map_or_kwlist, %Options{})
   end
 
 
-  defmodule Utils do
-    @doc ~s"""
-    Returns a copy of `str` with the first character lowercased.
-
-        iex> ExConstructor.Utils.lcfirst("Adam's Mom")
-        "adam's Mom"
-    """
-    def lcfirst(str) do
-      first = String.slice(str, 0..0) |> String.downcase
-      first <> String.slice(str, 1..-1)
-    end
-
-
-
+  ## Returns `str` with its first character lowercased.
+  @spec lcfirst(String.t) :: String.t
+  defp lcfirst(str) do
+    first = String.slice(str, 0..0) |> String.downcase
+    first <> String.slice(str, 1..-1)
   end
+
 end
 

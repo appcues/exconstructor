@@ -7,7 +7,7 @@
 ExConstructor is an Elixir library which makes it easy to instantiate
 structs from external data, such as that emitted by a JSON parser.
 
-Simply call `use ExConstructor` after a `defstruct` statement to inject
+Add `use ExConstructor` after a `defstruct` statement to inject
 a constructor function into the module.
 The generated constructor, called `new` by default,
 handles map-vs-keyword-list, string-vs-atom, and camelCase-vs-under_score
