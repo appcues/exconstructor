@@ -155,9 +155,9 @@ defmodule ExConstructor do
   end
 
   @spec populate_struct(struct, map_or_kwlist, map_or_kwlist) :: struct
-  def populate_struct(default, map_or_kwlist, opts) do
+  def populate_struct(struct, map_or_kwlist, opts) do
     opts_struct = populate_struct(%Options{}, opts, %Options{})
-    populate_struct(default, map_or_kwlist, opts_struct)
+    populate_struct(struct, map_or_kwlist, opts_struct)
   end
 
   @doc ~S"""
@@ -168,8 +168,8 @@ defmodule ExConstructor do
   under_score format.
   """
   @spec populate_struct(struct, map_or_kwlist) :: struct
-  def populate_struct(default, map_or_kwlist) do
-    populate_struct(default, map_or_kwlist, %Options{})
+  def populate_struct(struct, map_or_kwlist) do
+    populate_struct(struct, map_or_kwlist, %Options{})
   end
 
 
