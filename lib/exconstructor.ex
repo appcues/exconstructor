@@ -63,9 +63,10 @@ defmodule ExConstructor do
 
   @doc ~S"""
   Defines a constructor for the struct defined in the module in which this
-  macro was invoked.  If `name_or_opts` is an atom, it will be used as
-  the constructor name, otherwise `name_or_opts[:name]` or default `:new`
-  is used.
+  macro was invoked.
+
+  If `name_or_opts` is an atom, it will be used as the constructor name,
+  otherwise `name_or_opts[:name]` or default `:new` is used.
   Additional options in `name_or_opts` are stored in the
   `@exconstructor_default_options` module attribute.
 
@@ -125,9 +126,12 @@ defmodule ExConstructor do
     map = cond do
             is_map(map_or_kwlist) -> map_or_kwlist
             is_list(map_or_kwlist) -> Enum.into(map_or_kwlist, %{})
-            true -> raise "input must be a map or keyword list"
+            true -> raise "second argument must be a map or keyword list"
           end
-    keys = struct |> Map.from_struct |> Map.keys
+    keys = case struct do
+      %{__struct__: _t} -> struct |> Map.from_struct |> Map.keys
+      _ -> raise "first argument must be a struct"
+    end
     Enum.reduce keys, struct, fn (atom, acc) ->
       str = to_string(atom)
       under_str = Macro.underscore(str)
@@ -156,7 +160,17 @@ defmodule ExConstructor do
 
   @spec populate_struct(struct, map_or_kwlist, map_or_kwlist) :: struct
   def populate_struct(struct, map_or_kwlist, opts) do
-    opts_struct = populate_struct(%Options{}, opts, %Options{})
+    opts_struct = try do
+      populate_struct(%Options{}, opts, %Options{})
+    rescue
+      ## prevent confusing error message
+      ex in RuntimeError -> case ex.message do
+        "second argument" <> _ ->
+          raise "third argument must be a map or keyword list"
+        _ ->
+          raise ex
+      end
+    end
     populate_struct(struct, map_or_kwlist, opts_struct)
   end
 
