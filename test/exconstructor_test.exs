@@ -11,7 +11,7 @@ defmodule ExConstructorTest do
               Field_Six: 6,
               FieldSeven: 7,
               FieldEight: 8
-    ExConstructor.define_constructor
+    use ExConstructor
   end
 
   describe "populate_struct" do

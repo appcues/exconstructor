@@ -1,14 +1,16 @@
 defmodule ExConstructor do
   @moduledoc ~s"""
-  ExConstructor is an Elixir library which makes it easy to instantiate
+  ExConstructor is an Elixir library that makes it easy to instantiate
   structs from external data, such as that emitted by a JSON parser.
 
   Add `use ExConstructor` after a `defstruct` statement to inject
   a constructor function into the module.
+
   The generated constructor, called `new` by default,
-  handles map-vs-keyword-list, string-vs-atom, and camelCase-vs-under_score
-  input data issues automatically, DRYing up your code and letting you
-  move on to the interesting parts of your program.
+  handles map-vs-keyword-list, string-vs-atom-keys, and
+  camelCase-vs-under_score input data issues automatically,
+  DRYing up your code and letting you move on to the interesting
+  parts of your program.
 
   ## Installation
 
@@ -39,6 +41,8 @@ defmodule ExConstructor do
       TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
       # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
 
+  For advanced usage, see `__using__/1` and `populate_struct/3`.
+
   ## Authorship and License
 
   ExConstructor is copyright 2016 Appcues, Inc.
@@ -62,27 +66,37 @@ defmodule ExConstructor do
 
 
   @doc ~S"""
-  Defines a constructor for the struct defined in the module in which this
-  macro was invoked.
+  `use ExConstructor` defines a constructor for the current module's
+  struct.
 
-  If `name_or_opts` is an atom, it will be used as the constructor name,
-  otherwise `name_or_opts[:name]` or default `:new` is used.
+  If `name_or_opts` is an atom, it will be used as the constructor name.
+  If `name_or_opts` is a keyword list, `name_or_opts[:name]` will be
+  used as the constructor name.
+  By default, `:new` is used.
+
   Additional options in `name_or_opts` are stored in the
   `@exconstructor_default_options` module attribute.
 
-  This constructor is implemented in terms of [ExConstructor.populate_struct/3],
-  and accepts a map or keyword list of keys and values and an optional
-  `opts` keyword list.
-
-  The constructor's definition looks like:
-
-      @spec new(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
-      def new(map_or_kwlist, opts \\ []) do
-        ExConstructor.populate_struct(%__MODULE__{}, map_or_kwlist, Dict.merge(@exconstructor_default_options, opts))
-      end
+  The constructor is implemented in terms of `populate_struct/3`.
+  It accepts a map or keyword list of keys and values `map_or_kwlist`,
+  and an optional `opts` keyword list.
 
   Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
   under_score format.
+
+  `opts` may contain keys `strings`, `atoms`, `camelcase` and `underscore`.
+  Set these keys false to prevent testing of that key format in
+  `map_or_kwlist`.  All default to `true`.
+
+  For the default name `:new`, the constructor's definition looks like:
+
+      @spec new(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
+      def new(map_or_kwlist, opts \\ []) do
+        ExConstructor.populate_struct(%__MODULE__{}, map_or_kwlist, Keyword.merge(@exconstructor_default_options, opts))
+      end
+
+  Overriding `new/2` before or after the `use ExConstructor` statement
+  is allowed. Example uses include implementing your own `opts` handling.
   """
   defmacro __using__(name_or_opts \\ :new) do
     opts = cond do
@@ -99,7 +113,7 @@ defmodule ExConstructor do
         ExConstructor.populate_struct(
           %__MODULE__{},
           map_or_kwlist,
-          Dict.merge(@exconstructor_default_options, opts)
+          Keyword.merge(@exconstructor_default_options, opts)
         )
       end
     end
