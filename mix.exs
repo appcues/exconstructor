@@ -3,7 +3,7 @@ defmodule ExConstructor.Mixfile do
 
   def project do
     [app: :exconstructor,
-     version: "0.9.0",
+     version: "1.0.0",
      description: description,
      package: package,
      elixir: "~> 1.2",
@@ -11,7 +11,7 @@ defmodule ExConstructor.Mixfile do
      start_permanent: Mix.env == :prod,
      docs: [main: ExConstructor],
      test_coverage: [tool: ExCoveralls],
-     #test_coverage: [tool: Coverex.Task, coveralls: true],
+     #test_coverage: [tool: Coverex.Task],
      deps: deps]
   end
 
