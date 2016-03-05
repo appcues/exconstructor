@@ -187,5 +187,22 @@ defmodule ExConstructorTest do
     end
   end
 
+  describe "overriding" do
+    defmodule TestStructOverrideNew do
+      defstruct [:name]
+      use ExConstructor
+
+      def new(data, args) do
+        res = super(data, args)
+        %{res | name: String.capitalize(res.name)}
+      end
+    end
+
+    test "can override new and call super" do
+      ts_map = TestStructOverrideNew.new(%{"name" => "jim"})
+      assert("Jim" == ts_map.name)
+    end
+  end
+
 end
 

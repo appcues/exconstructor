@@ -116,6 +116,8 @@ defmodule ExConstructor do
           Keyword.merge(@exconstructor_default_options, opts)
         )
       end
+
+      defoverridable [{unquote(constructor_name), 2}]
     end
   end
 
