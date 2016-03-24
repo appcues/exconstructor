@@ -192,7 +192,7 @@ defmodule ExConstructorTest do
       defstruct [:name]
       use ExConstructor
 
-      def new(data, args) do
+      def new(data, args \\ []) do
         res = super(data, args)
         %{res | name: String.capitalize(res.name)}
       end
