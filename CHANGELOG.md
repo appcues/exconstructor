@@ -1,9 +1,16 @@
 # Changelog
 
+## 1.0.2
+
+Fixed arity bug around `defoverride`.
+Thanks, [@meowy](https://github.com/meowy)!
+
+
 ## 1.0.1
 
 Added `defoverridable` to constructor generation macro.
-Thanks, @obmarg!
+Thanks, [@obmarg](https://github.com/obmarg)!
+
 
 ## 1.0.0
 

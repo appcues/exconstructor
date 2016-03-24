@@ -94,7 +94,7 @@ defmodule ExConstructor do
       def new(map_or_kwlist, opts \\ []) do
         ExConstructor.populate_struct(%__MODULE__{}, map_or_kwlist, Keyword.merge(@exconstructor_default_options, opts))
       end
-      defoverridable new: 2
+      defoverridable [new: 1, new: 2]
 
   Overriding `new/2` is allowed; the generated function can be called by
   `super`.  Example uses include implementing your own `opts` handling.
