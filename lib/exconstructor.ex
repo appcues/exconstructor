@@ -242,7 +242,7 @@ defmodule ExConstructor do
   defp acronyms_with_camel_case(str) do
     words = String.split(str, "_")
     |> Enum.map(&String.capitalize/1)
-    |> Enum.join()
+    |> Enum.join("_")
     |> acronyms()
   end
 
