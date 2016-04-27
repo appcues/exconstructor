@@ -11,7 +11,8 @@ defmodule ExConstructorTest do
               Field_Six: 6,
               FieldSeven: 7,
               FieldEight: 8,
-              field_nine: 9
+              field_nine: 9,
+              field_ten: 10
     use ExConstructor
   end
 
@@ -21,10 +22,10 @@ defmodule ExConstructorTest do
     it "handles maps with string-vs-atom, camel-vs-underscore, and literals" do
       map = %{"field_one" => "a", "fieldTwo" => "b", :field_three => "c",
               :fieldFour => "d", "Field_Six" => "f", "field_seven" => 7,
-              :field_eight => 8, "FieldNine" => "Nine"}
+              :field_eight => 8, "FieldNine" => "Nine", "FieldTen": 10}
       struct = %TestStruct{field_one: "a", field_two: "b", field_three: "c",
                            field_four: "d", field_five: 5, Field_Six: "f",
-                           FieldSeven: 7, FieldEight: 8, field_nine: "Nine"}
+                           FieldSeven: 7, FieldEight: 8, field_nine: "Nine", field_ten: 10}
       assert(struct == populate_struct(%TestStruct{}, map, []))
     end
 
@@ -32,7 +33,7 @@ defmodule ExConstructorTest do
       kwlist = [{:field_one, "a"}, {"field_two", "b"}]
       struct = %TestStruct{field_one: "a", field_two: "b", field_three: 3,
                            field_four: 4, field_five: 5, Field_Six: 6,
-                           FieldSeven: 7, FieldEight: 8, field_nine: 9}
+                           FieldSeven: 7, FieldEight: 8, field_nine: 9, field_ten: 10}
       assert(struct == populate_struct(%TestStruct{}, kwlist, []))
     end
 
