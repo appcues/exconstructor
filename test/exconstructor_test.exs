@@ -14,7 +14,7 @@ defmodule ExConstructorTest do
     use ExConstructor
   end
 
-  describe "populate_struct" do
+  context "populate_struct" do
     import ExConstructor
 
     it "handles maps with string-vs-atom, camel-vs-underscore, and literals" do
@@ -62,7 +62,7 @@ defmodule ExConstructorTest do
   end
 
 
-  describe "invocation styles" do
+  context "invocation styles" do
     defmodule TestStruct1 do
       defstruct field: nil
       ExConstructor.define_constructor
@@ -88,31 +88,31 @@ defmodule ExConstructorTest do
       ExConstructor.__using__
     end
 
-    describe "ExConstructor.define_constructor" do
+    context "ExConstructor.define_constructor" do
       it "uses the default constructor name" do
         assert(nil != TestStruct1.new(%{}))
       end
     end
 
-    describe "use ExConstructor" do
+    context "use ExConstructor" do
       it "uses the default constructor name" do
         assert(nil != TestStruct2.new(%{}))
       end
     end
 
-    describe "use ExConstructor, :constructor_name" do
+    context "use ExConstructor, :constructor_name" do
       it "uses the given constructor name" do
         assert(nil != TestStruct3.make(%{}))
       end
     end
 
-    describe "use ExConstructor, name: :constructor_name" do
+    context "use ExConstructor, name: :constructor_name" do
       it "uses the given constructor name" do
         assert(nil != TestStruct4.build(%{}))
       end
     end
 
-    describe "ExConstructor.__using__" do
+    context "ExConstructor.__using__" do
       it "uses the default constructor name" do
         assert(nil != TestStruct5.new(%{}))
       end
@@ -130,7 +130,7 @@ defmodule ExConstructorTest do
   end
 
 
-  describe "options" do
+  context "options" do
     defmodule TestStructNoStrings do
       defstruct foo: 1
       use ExConstructor, strings: false
@@ -187,7 +187,7 @@ defmodule ExConstructorTest do
     end
   end
 
-  describe "overriding" do
+  context "overriding" do
     defmodule TestStructOverrideNew do
       defstruct [:name]
       use ExConstructor
@@ -198,7 +198,7 @@ defmodule ExConstructorTest do
       end
     end
 
-    test "can override new and call super" do
+    it "can override new and call super" do
       ts_map = TestStructOverrideNew.new(%{"name" => "jim"})
       assert("Jim" == ts_map.name)
     end
