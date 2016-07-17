@@ -148,8 +148,13 @@ defmodule ExConstructor do
       %{__struct__: _t} -> struct |> Map.from_struct |> Map.keys
       _ -> raise "first argument must be a struct"
     end
-    Enum.reduce keys, struct, fn (atom, acc) ->
-      str = to_string(atom)
+    parse_map(struct, map, keys, opts)
+  end
+
+  @spec parse_map(struct, map, list, %Options{}) :: struct
+  defp parse_map(struct, map, keys, %Options{}=opts) do
+    Enum.reduce keys, struct, fn (key, acc) ->
+      str = to_string(key)
       under_str = Macro.underscore(str)
       camel_str = Macro.camelize(str) |> lcfirst
       under_atom = String.to_atom(under_str)
@@ -157,8 +162,8 @@ defmodule ExConstructor do
       value = cond do
         Map.has_key?(map, str) and opts.strings ->
           Map.get(map, str)
-        Map.has_key?(map, atom) and opts.atoms ->
-          Map.get(map, atom)
+        Map.has_key?(map, key) and opts.atoms ->
+          Map.get(map, key)
         Map.has_key?(map, under_str) and opts.strings and opts.underscore ->
           Map.get(map, under_str)
         Map.has_key?(map, under_atom) and opts.atoms and opts.underscore ->
@@ -168,9 +173,17 @@ defmodule ExConstructor do
         Map.has_key?(map, camel_atom) and opts.atoms and opts.camelcase ->
           Map.get(map, camel_atom)
         true ->
-          Map.get(struct, atom)
+          Map.get(struct, key)
       end
-      Map.put(acc, atom, value)
+      value = 
+        if is_map(value) do
+          sub_struct = struct |> Map.get(key)
+          sub_struct_keys = sub_struct |> Map.keys
+          parse_map(sub_struct, value, sub_struct_keys, opts)
+        else
+          value
+        end
+      Map.put(acc, key, value)
     end
   end
 
