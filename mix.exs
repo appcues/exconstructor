@@ -4,15 +4,15 @@ defmodule ExConstructor.Mixfile do
   def project do
     [app: :exconstructor,
      version: "1.0.2",
-     description: description,
-     package: package,
+     description: description(),
+     package: package(),
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      docs: [main: ExConstructor],
      test_coverage: [tool: ExCoveralls],
      #test_coverage: [tool: Coverex.Task],
-     deps: deps]
+     deps: deps()]
   end
 
   def description do
