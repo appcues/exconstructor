@@ -61,6 +61,7 @@ defmodule ExConstructor do
     defstruct strings: true,
               atoms: true,
               camelcase: true,
+              uppercamelcase: true,
               underscore: true
   end
 
@@ -130,10 +131,11 @@ defmodule ExConstructor do
   Returns a copy of `struct` into which the values in `map_or_kwlist`
   have been applied.
 
-  Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
-  under_score format.
+  Keys of `map_or_kwlist` may be strings or atoms, in camelCase,
+  UpperCamelCase, or under_score format.
 
-  `opts` may contain keys `strings`, `atoms`, `camelcase` and `underscore`.
+  `opts` may contain keys `strings`, `atoms`, `camelcase`, `uppercamelcase`,
+  and `underscore`.
   Set these keys false to prevent testing of that key format in
   `map_or_kwlist`.  All default to `true`.
   """
@@ -152,7 +154,7 @@ defmodule ExConstructor do
       str = to_string(atom)
       under_str = Macro.underscore(str)
       up_camel_str = Macro.camelize(str)
-      camel_str = Macro.camelize(str) |> lcfirst
+      camel_str = lcfirst(up_camel_str)
       under_atom = String.to_atom(under_str)
       camel_atom = String.to_atom(camel_str)
       value = cond do
@@ -164,7 +166,7 @@ defmodule ExConstructor do
           Map.get(map, under_str)
         Map.has_key?(map, under_atom) and opts.atoms and opts.underscore ->
           Map.get(map, under_atom)
-        Map.has_key?(map, up_camel_str) and opts.strings and opts.camelcase ->
+        Map.has_key?(map, up_camel_str) and opts.strings and opts.uppercamelcase ->
           Map.get(map, up_camel_str)
         Map.has_key?(map, camel_str) and opts.strings and opts.camelcase ->
           Map.get(map, camel_str)

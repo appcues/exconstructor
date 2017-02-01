@@ -147,6 +147,11 @@ defmodule ExConstructorTest do
       use ExConstructor, camelcase: false
     end
 
+    defmodule TestStructNoUpperCamel do
+      defstruct foo_bar: 1
+      use ExConstructor, uppercamelcase: false
+    end
+
     defmodule TestStructNoUnder do
       defstruct fooBar: 1
       use ExConstructor, underscore: false
@@ -170,6 +175,13 @@ defmodule ExConstructorTest do
       ts_map = TestStructNoCamel.new(%{:fooBar => 2})
       assert(1 == ts_map.foo_bar)
       ts_kwlist = TestStructNoCamel.new([{"fooBar", 2}])
+      assert(1 == ts_kwlist.foo_bar)
+    end
+
+    it "supports uppercamelcase: false" do
+      ts_map = TestStructNoUpperCamel.new(%{:FooBar => 2})
+      assert(1 == ts_map.foo_bar)
+      ts_kwlist = TestStructNoUpperCamel.new([{"FooBar", 2}])
       assert(1 == ts_kwlist.foo_bar)
     end
 
