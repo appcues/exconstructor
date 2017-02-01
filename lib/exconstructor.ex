@@ -61,7 +61,8 @@ defmodule ExConstructor do
     defstruct strings: true,
               atoms: true,
               camelcase: true,
-              underscore: true
+              underscore: true,
+              acronyms: true
   end
 
 
@@ -164,6 +165,8 @@ defmodule ExConstructor do
           Map.get(map, under_str)
         Map.has_key?(map, under_atom) and opts.atoms and opts.underscore ->
           Map.get(map, under_atom)
+        has_acronym?(map, str) and opts.strings and opts.acronyms ->
+          Map.get(map, get_acryonym(map, str))
         Map.has_key?(map, up_camel_str) and opts.strings and opts.camelcase ->
           Map.get(map, up_camel_str)
         Map.has_key?(map, camel_str) and opts.strings and opts.camelcase ->
@@ -212,5 +215,44 @@ defmodule ExConstructor do
     first = String.slice(str, 0..0) |> String.downcase
     first <> String.slice(str, 1..-1)
   end
+
+
+  defp all_acronyms(str) do
+    Enum.concat(acronyms(str), acronyms_with_camel_case(str))
+    |> Enum.uniq()
+  end
+
+  defp acronyms(str) do
+    words = String.split(str, "_")
+    count = Enum.count(words)
+    words
+    |> List.duplicate(count)
+    |> Enum.with_index(1)
+    |> Enum.map(
+      fn({words_list, outer_index}) ->
+        Enum.with_index(words_list, 1)
+        |> Enum.map(
+          fn({word, inner_index}) -> if outer_index == inner_index, do: String.upcase(word), else: word end
+        )
+      end
+    )
+    |> Enum.map(&Enum.join/1)
+  end
+
+  defp acronyms_with_camel_case(str) do
+    String.split(str, "_")
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join("_")
+    |> acronyms()
+  end
+
+  defp has_acronym?(map, str) do
+    all_acronyms(str) |> Enum.any?(fn(new_str) -> Map.has_key?(map, new_str) end )
+  end
+
+  defp get_acryonym(map, str) do
+    all_acronyms(str) |> Enum.find(fn(new_str) -> Map.has_key?(map, new_str) end )
+  end
+
 
 end
