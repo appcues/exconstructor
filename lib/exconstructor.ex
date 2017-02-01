@@ -38,14 +38,14 @@ defmodule ExConstructor do
         use ExConstructor
       end
 
-      TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
+      TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :FieldFour => "d"})
       # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
 
   For advanced usage, see `__using__/1` and `populate_struct/3`.
 
   ## Authorship and License
 
-  ExConstructor is copyright 2016 Appcues, Inc.
+  ExConstructor is copyright 2016-2017 Appcues, Inc.
 
   ExConstructor is released under the
   [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).

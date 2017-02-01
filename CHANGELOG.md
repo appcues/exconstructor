@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+Support `UpperCamelCase` keys.
+Thanks, [@anronin](https://github.com/anronin)!
+
 ## 1.0.2
 
 Fixed arity bug around `defoverride`.

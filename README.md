@@ -27,7 +27,7 @@ defmodule TestStruct do
   use ExConstructor
 end
 
-TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fieldFour => "d"})
+TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :FieldFour => "d"})
 # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
 ```
 
@@ -37,9 +37,31 @@ TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :fi
 Hexdocs.pm.](http://hexdocs.pm/exconstructor/ExConstructor.html)
 
 
+## Contributors
+
+Many thanks to those who've contributed to ExConstructor:
+
+* Graeme Coupar ([@grambo](https://github.com/grambo))
+* Mel Kicchi ([@meowy](https://github.com/meowy))
+* Andrey Ronin ([@anronin](https://github.com/anronin))
+
+
+## How to Contribute
+
+My favorite contributions are PRs with code that matches project style,
+and that come with full test coverage and documentation.  I have a hard
+time saying no to them.
+
+Feature requests are also welcome, but the timeline may be much longer.
+
+Bug reports are great -- please include as much information as possible
+(Erlang/Elixir/Mix version, dependencies and their versions, minimal
+test case, etc.) and I will be much quicker in resolving the issue.
+
+
 ## Authorship and License
 
-ExConstructor is copyright 2016 Appcues, Inc.
+ExConstructor is copyright 2016-2017 Appcues, Inc.
 
 ExConstructor is released under the
 [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
