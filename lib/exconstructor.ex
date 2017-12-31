@@ -113,7 +113,7 @@ defmodule ExConstructor do
       @spec unquote(constructor_name)(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
       def unquote(constructor_name)(map_or_kwlist, opts \\ []) do
         ExConstructor.populate_struct(
-          %__MODULE__{},
+          struct(__MODULE__, []),
           map_or_kwlist,
           Keyword.merge(@exconstructor_default_options, opts)
         )
