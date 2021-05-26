@@ -39,7 +39,7 @@ defmodule ExConstructor.Mixfile do
 
   defp deps do
     [
-      {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
+      {:ex_spec, "~> 2.0.1", only: :test},
       {:excoveralls, "~> 0.13", only: :test},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
