@@ -42,7 +42,7 @@ defmodule ExConstructor.Mixfile do
       {:ex_spec, "~> 2.0.1", only: :test},
       {:excoveralls, "~> 0.13", only: :test},
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
+      {:ex_doc, "~> 0.24", only: :dev},
       {:dialyxir, "~> 1.1.0", runtime: false}
     ]
   end
