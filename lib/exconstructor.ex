@@ -136,7 +136,7 @@ defmodule ExConstructor do
   Set these keys false to prevent testing of that key format in
   `map_or_kwlist`.  All default to `true`.
   """
-  @spec populate_struct(struct, map_or_kwlist, %Options{}) :: struct
+  @spec populate_struct(struct, map_or_kwlist, %Options{} | map_or_kwlist) :: struct
   def populate_struct(struct, map_or_kwlist, %Options{} = opts) do
     map =
       cond do
