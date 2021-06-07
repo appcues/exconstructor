@@ -17,13 +17,7 @@ defmodule ExConstructor do
   1. Add ExConstructor to your list of dependencies in `mix.exs`:
 
           def deps do
-            [{:exconstructor, "~> #{ExConstructor.Mixfile.project[:version]}"}]
-          end
-
-  2. Ensure ExConstructor is started before your application:
-
-          def application do
-            [applications: [:exconstructor]]
+            [{:exconstructor, "~> #{ExConstructor.Mixfile.project()[:version]}"}]
           end
 
   ## Usage
@@ -45,13 +39,14 @@ defmodule ExConstructor do
 
   ## Authorship and License
 
-  ExConstructor is copyright 2016-2017 Appcues, Inc.
+  ExConstructor is copyright 2016-2021 Appcues, Inc.
 
   ExConstructor is released under the
   [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
   """
 
-  @type map_or_kwlist :: %{String.t => any}|%{atom => any}|[{String.t, any}]|[{atom, any}]
+  @type map_or_kwlist ::
+          %{String.t() => any} | %{atom => any} | [{String.t(), any}] | [{atom, any}]
 
   defmodule Options do
     @moduledoc ~S"""
@@ -64,7 +59,6 @@ defmodule ExConstructor do
               uppercamelcase: true,
               underscore: true
   end
-
 
   @doc ~S"""
   `use ExConstructor` defines a constructor for the current module's
@@ -101,16 +95,18 @@ defmodule ExConstructor do
   `super`.  Example uses include implementing your own `opts` handling.
   """
   defmacro __using__(name_or_opts \\ :new) do
-    opts = cond do
-             is_atom(name_or_opts) -> [name: name_or_opts]
-             is_list(name_or_opts) -> name_or_opts
-             true -> raise "argument must be atom (constructor name) or keyword list (opts)"
-           end
+    opts =
+      cond do
+        is_atom(name_or_opts) -> [name: name_or_opts]
+        is_list(name_or_opts) -> name_or_opts
+        true -> raise "argument must be atom (constructor name) or keyword list (opts)"
+      end
+
     constructor_name = opts[:name] || :new
 
     quote do
       @exconstructor_default_options unquote(opts)
-      @spec unquote(constructor_name)(ExConstructor.map_or_kwlist, Keyword.t) :: %__MODULE__{}
+      @spec unquote(constructor_name)(ExConstructor.map_or_kwlist(), Keyword.t()) :: %__MODULE__{}
       def unquote(constructor_name)(map_or_kwlist, opts \\ []) do
         ExConstructor.populate_struct(
           %__MODULE__{},
@@ -118,6 +114,7 @@ defmodule ExConstructor do
           Keyword.merge(@exconstructor_default_options, opts)
         )
       end
+
       defoverridable [{unquote(constructor_name), 1}, {unquote(constructor_name), 2}]
     end
   end
@@ -140,58 +137,75 @@ defmodule ExConstructor do
   `map_or_kwlist`.  All default to `true`.
   """
   @spec populate_struct(struct, map_or_kwlist, %Options{}) :: struct
-  def populate_struct(struct, map_or_kwlist, %Options{}=opts) do
-    map = cond do
-            is_map(map_or_kwlist) -> map_or_kwlist
-            is_list(map_or_kwlist) -> Enum.into(map_or_kwlist, %{})
-            true -> raise "second argument must be a map or keyword list"
-          end
-    keys = case struct do
-      %{__struct__: _t} -> struct |> Map.from_struct |> Map.keys
-      _ -> raise "first argument must be a struct"
-    end
-    Enum.reduce keys, struct, fn (atom, acc) ->
+  def populate_struct(struct, map_or_kwlist, %Options{} = opts) do
+    map =
+      cond do
+        is_map(map_or_kwlist) -> map_or_kwlist
+        is_list(map_or_kwlist) -> Enum.into(map_or_kwlist, %{})
+        true -> raise "second argument must be a map or keyword list"
+      end
+
+    keys =
+      case struct do
+        %{__struct__: _t} -> struct |> Map.from_struct() |> Map.keys()
+        _ -> raise "first argument must be a struct"
+      end
+
+    Enum.reduce(keys, struct, fn atom, acc ->
       str = to_string(atom)
       under_str = Macro.underscore(str)
       up_camel_str = Macro.camelize(str)
       camel_str = lcfirst(up_camel_str)
       under_atom = String.to_atom(under_str)
       camel_atom = String.to_atom(camel_str)
-      value = cond do
-        Map.has_key?(map, str) and opts.strings ->
-          Map.get(map, str)
-        Map.has_key?(map, atom) and opts.atoms ->
-          Map.get(map, atom)
-        Map.has_key?(map, under_str) and opts.strings and opts.underscore ->
-          Map.get(map, under_str)
-        Map.has_key?(map, under_atom) and opts.atoms and opts.underscore ->
-          Map.get(map, under_atom)
-        Map.has_key?(map, up_camel_str) and opts.strings and opts.uppercamelcase ->
-          Map.get(map, up_camel_str)
-        Map.has_key?(map, camel_str) and opts.strings and opts.camelcase ->
-          Map.get(map, camel_str)
-        Map.has_key?(map, camel_atom) and opts.atoms and opts.camelcase ->
-          Map.get(map, camel_atom)
-        true ->
-          Map.get(struct, atom)
-      end
+
+      value =
+        cond do
+          Map.has_key?(map, str) and opts.strings ->
+            Map.get(map, str)
+
+          Map.has_key?(map, atom) and opts.atoms ->
+            Map.get(map, atom)
+
+          Map.has_key?(map, under_str) and opts.strings and opts.underscore ->
+            Map.get(map, under_str)
+
+          Map.has_key?(map, under_atom) and opts.atoms and opts.underscore ->
+            Map.get(map, under_atom)
+
+          Map.has_key?(map, up_camel_str) and opts.strings and opts.uppercamelcase ->
+            Map.get(map, up_camel_str)
+
+          Map.has_key?(map, camel_str) and opts.strings and opts.camelcase ->
+            Map.get(map, camel_str)
+
+          Map.has_key?(map, camel_atom) and opts.atoms and opts.camelcase ->
+            Map.get(map, camel_atom)
+
+          true ->
+            Map.get(struct, atom)
+        end
+
       Map.put(acc, atom, value)
-    end
+    end)
   end
 
-  @spec populate_struct(struct, map_or_kwlist, map_or_kwlist) :: struct
   def populate_struct(struct, map_or_kwlist, opts) do
-    opts_struct = try do
-      populate_struct(%Options{}, opts, %Options{})
-    rescue
-      ## prevent confusing error message
-      ex in RuntimeError -> case ex.message do
-        "second argument" <> _ ->
-          raise "third argument must be a map or keyword list"
-        _ ->
-          raise ex
+    opts_struct =
+      try do
+        populate_struct(%Options{}, opts, %Options{})
+      rescue
+        ## prevent confusing error message
+        ex in RuntimeError ->
+          case ex.message do
+            "second argument" <> _ ->
+              raise "third argument must be a map or keyword list"
+
+            _ ->
+              raise ex
+          end
       end
-    end
+
     populate_struct(struct, map_or_kwlist, opts_struct)
   end
 
@@ -207,12 +221,10 @@ defmodule ExConstructor do
     populate_struct(struct, map_or_kwlist, %Options{})
   end
 
-
   ## Returns `str` with its first character lowercased.
-  @spec lcfirst(String.t) :: String.t
+  @spec lcfirst(String.t()) :: String.t()
   defp lcfirst(str) do
-    first = String.slice(str, 0..0) |> String.downcase
+    first = String.slice(str, 0..0) |> String.downcase()
     first <> String.slice(str, 1..-1)
   end
-
 end

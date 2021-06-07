@@ -2,17 +2,19 @@ defmodule ExConstructor.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :exconstructor,
-     version: "1.1.0",
-     description: description(),
-     package: package(),
-     elixir: "~> 1.2",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     docs: [main: ExConstructor],
-     test_coverage: [tool: ExCoveralls],
-     #test_coverage: [tool: Coverex.Task],
-     deps: deps()]
+    [
+      app: :exconstructor,
+      version: "1.2.0",
+      description: description(),
+      package: package(),
+      elixir: "~> 1.2",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      docs: [main: ExConstructor],
+      test_coverage: [tool: ExCoveralls],
+      # test_coverage: [tool: Coverex.Task],
+      deps: deps()
+    ]
   end
 
   def description do
@@ -37,12 +39,11 @@ defmodule ExConstructor.Mixfile do
 
   defp deps do
     [
-      {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
-      {:excoveralls, "~> 0.4.3", only: :test},
-      {:coverex, "~> 1.4.7", only: :test},
+      {:ex_spec, "~> 2.0.1", only: :test},
+      {:excoveralls, "~> 0.13", only: :test},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
+      {:dialyxir, "~> 1.1.0", runtime: false}
     ]
   end
 end
-

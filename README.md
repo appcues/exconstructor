@@ -1,6 +1,6 @@
 # ExConstructor
 
-[![wercker status](https://app.wercker.com/status/f2dbf92012667da4ac8511f619da4429/s/master "wercker status")](https://app.wercker.com/project/bykey/f2dbf92012667da4ac8511f619da4429)
+[![Build Status](https://circleci.com/gh/appcues/exconstructor.svg?style=svg)](https://circleci.com/gh/appcues/exconstructor)
 [![Coverage Status](https://coveralls.io/repos/github/appcues/exconstructor/badge.svg?branch=master)](https://coveralls.io/github/appcues/exconstructor?branch=master)
 [![Hex.pm Version](http://img.shields.io/hexpm/v/exconstructor.svg?style=flat)](https://hex.pm/packages/exconstructor)
 
@@ -61,7 +61,7 @@ test case, etc.) and I will be much quicker in resolving the issue.
 
 ## Authorship and License
 
-ExConstructor is copyright 2016-2017 Appcues, Inc.
+ExConstructor is copyright 2016-2021 Appcues, Inc.
 
 ExConstructor is released under the
 [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).

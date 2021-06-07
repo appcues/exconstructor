@@ -12,6 +12,7 @@ defmodule ExConstructorTest do
               FieldSeven: 7,
               FieldEight: 8,
               field_nine: 9
+
     use ExConstructor
   end
 
@@ -19,33 +20,69 @@ defmodule ExConstructorTest do
     import ExConstructor
 
     it "handles maps with string-vs-atom, camel-vs-underscore, and literals" do
-      map = %{"field_one" => "a", "fieldTwo" => "b", :field_three => "c",
-              :fieldFour => "d", "Field_Six" => "f", "field_seven" => 7,
-              :field_eight => 8, "FieldNine" => "Nine"}
-      struct = %TestStruct{field_one: "a", field_two: "b", field_three: "c",
-                           field_four: "d", field_five: 5, Field_Six: "f",
-                           FieldSeven: 7, FieldEight: 8, field_nine: "Nine"}
+      map = %{
+        "field_one" => "a",
+        "fieldTwo" => "b",
+        :field_three => "c",
+        :fieldFour => "d",
+        "Field_Six" => "f",
+        "field_seven" => 7,
+        :field_eight => 8,
+        "FieldNine" => "Nine"
+      }
+
+      struct = %TestStruct{
+        field_one: "a",
+        field_two: "b",
+        field_three: "c",
+        field_four: "d",
+        field_five: 5,
+        Field_Six: "f",
+        FieldSeven: 7,
+        FieldEight: 8,
+        field_nine: "Nine"
+      }
+
       assert(struct == populate_struct(%TestStruct{}, map, []))
     end
 
     it "handles keyword lists" do
       kwlist = [{:field_one, "a"}, {"field_two", "b"}]
-      struct = %TestStruct{field_one: "a", field_two: "b", field_three: 3,
-                           field_four: 4, field_five: 5, Field_Six: 6,
-                           FieldSeven: 7, FieldEight: 8, field_nine: 9}
+
+      struct = %TestStruct{
+        field_one: "a",
+        field_two: "b",
+        field_three: 3,
+        field_four: 4,
+        field_five: 5,
+        Field_Six: 6,
+        FieldSeven: 7,
+        FieldEight: 8,
+        field_nine: 9
+      }
+
       assert(struct == populate_struct(%TestStruct{}, kwlist, []))
     end
 
     it "converts opts into %Options{}" do
-      ts = populate_struct(
-        %TestStruct{}, %{"field_one" => 11, :field_two => 22}, strings: false)
+      ts =
+        populate_struct(
+          %TestStruct{},
+          %{"field_one" => 11, :field_two => 22},
+          strings: false
+        )
+
       assert(11 != ts.field_one)
       assert(22 == ts.field_two)
     end
 
     it "defaults to %Options{} when none given" do
-      ts = populate_struct(
-        %TestStruct{}, %{"field_one" => 11, :field_two => 22})
+      ts =
+        populate_struct(
+          %TestStruct{},
+          %{"field_one" => 11, :field_two => 22}
+        )
+
       assert(11 == ts.field_one)
       assert(22 == ts.field_two)
     end
@@ -62,11 +99,10 @@ defmodule ExConstructorTest do
     end
   end
 
-
   context "invocation styles" do
     defmodule TestStruct1 do
       defstruct field: nil
-      ExConstructor.define_constructor
+      ExConstructor.define_constructor()
     end
 
     defmodule TestStruct2 do
@@ -86,7 +122,7 @@ defmodule ExConstructorTest do
 
     defmodule TestStruct5 do
       defstruct field: nil
-      ExConstructor.__using__
+      ExConstructor.__using__()
     end
 
     context "ExConstructor.define_constructor" do
@@ -120,16 +156,17 @@ defmodule ExConstructorTest do
     end
 
     it "raises exception on bad invocation" do
-      ex = assert_raise(RuntimeError, fn ->
-        defmodule TestStruct6 do
-          defstruct field: nil
-          ExConstructor.__using__(22)
-        end
-      end)
+      ex =
+        assert_raise(RuntimeError, fn ->
+          defmodule TestStruct6 do
+            defstruct field: nil
+            ExConstructor.__using__(22)
+          end
+        end)
+
       assert(String.match?(ex.message, ~r"^argument must be"))
     end
   end
-
 
   context "options" do
     defmodule TestStructNoStrings do
@@ -216,5 +253,4 @@ defmodule ExConstructorTest do
       assert("Jim" == ts_map.name)
     end
   end
-
 end
