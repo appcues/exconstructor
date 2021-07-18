@@ -2,7 +2,13 @@
 
 [![Build Status](https://circleci.com/gh/appcues/exconstructor.svg?style=svg)](https://circleci.com/gh/appcues/exconstructor)
 [![Coverage Status](https://coveralls.io/repos/github/appcues/exconstructor/badge.svg?branch=master)](https://coveralls.io/github/appcues/exconstructor?branch=master)
-[![Hex.pm Version](http://img.shields.io/hexpm/v/exconstructor.svg?style=flat)](https://hex.pm/packages/exconstructor)
+[![Module Version](https://img.shields.io/hexpm/v/exconstructor.svg)](https://hex.pm/packages/exconstructor)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/exconstructor/)
+[![Total Download](https://img.shields.io/hexpm/dt/exconstructor.svg)](https://hex.pm/packages/exconstructor)
+[![License](https://img.shields.io/hexpm/l/exconstructor.svg)](https://github.com/appcues/exconstructor/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/appcues/exconstructor.svg)](https://github.com/appcues/exconstructor/commits/master)
+
+<!-- MDOC !-->
 
 ExConstructor is an Elixir library that makes it easy to instantiate
 structs from external data, such as that emitted by a JSON parser.
@@ -15,6 +21,18 @@ handles *map-vs-keyword-list*, *string-vs-atom-keys*, and
 *camelCase-vs-under_score* input data issues automatically,
 DRYing up your code and letting you move on to the interesting
 parts of your program.
+
+## Installation
+
+Add `:exconstructor` to your list of dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:exconstructor, "~> 1.2"}
+  ]
+end
+```
 
 ## Example
 
@@ -31,11 +49,9 @@ TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :Fi
 # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
 ```
 
-## [Full Documentation](http://hexdocs.pm/exconstructor/ExConstructor.html)
+For advanced usage, see `ExConstructor.__using__/1` and `ExConstructor.populate_struct/3`.
 
-[Full ExConstructor documentation is available on
-Hexdocs.pm.](http://hexdocs.pm/exconstructor/ExConstructor.html)
-
+<!-- MDOC !-->
 
 ## Contributors
 
@@ -59,10 +75,9 @@ Bug reports are great -- please include as much information as possible
 test case, etc.) and I will be much quicker in resolving the issue.
 
 
-## Authorship and License
+## Copyright and License
 
-ExConstructor is copyright 2016-2021 Appcues, Inc.
+Copyright (c) 2016 Appcues, Inc.
 
 ExConstructor is released under the
 [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
-
