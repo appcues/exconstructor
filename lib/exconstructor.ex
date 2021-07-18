@@ -1,56 +1,16 @@
 defmodule ExConstructor do
-  @moduledoc ~s"""
-  ExConstructor is an Elixir library that makes it easy to instantiate
-  structs from external data, such as that emitted by a JSON parser.
-
-  Add `use ExConstructor` after a `defstruct` statement to inject
-  a constructor function into the module.
-
-  The generated constructor, called `new` by default,
-  handles map-vs-keyword-list, string-vs-atom-keys, and
-  camelCase-vs-under_score input data issues automatically,
-  DRYing up your code and letting you move on to the interesting
-  parts of your program.
-
-  ## Installation
-
-  1. Add ExConstructor to your list of dependencies in `mix.exs`:
-
-          def deps do
-            [{:exconstructor, "~> #{ExConstructor.Mixfile.project()[:version]}"}]
-          end
-
-  ## Usage
-
-  Example:
-
-      defmodule TestStruct do
-        defstruct field_one: 1,
-                  field_two: 2,
-                  field_three: 3,
-                  field_four: 4,
-        use ExConstructor
-      end
-
-      TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :FieldFour => "d"})
-      # => %TestStruct{field_one: "a", field_two: "b", field_three: "c", field_four: "d"}
-
-  For advanced usage, see `__using__/1` and `populate_struct/3`.
-
-  ## Authorship and License
-
-  ExConstructor is copyright 2016-2021 Appcues, Inc.
-
-  ExConstructor is released under the
-  [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
-  """
+  @external_resource "README.md"
+  @moduledoc File.read!("README.md")
+             |> String.split(~r/<!-- MDOC !-->/)
+             |> Enum.fetch!(1)
 
   @type map_or_kwlist ::
           %{String.t() => any} | %{atom => any} | [{String.t(), any}] | [{atom, any}]
 
   defmodule Options do
     @moduledoc ~S"""
-    Represents the options passed to `populate_struct/3`.
+    Represents the options passed to `ExConstructor.populate_struct/3`.
+
     Set any value to `false` to disable checking for that kind of key.
     """
     defstruct strings: true,
@@ -67,6 +27,7 @@ defmodule ExConstructor do
   If `name_or_opts` is an atom, it will be used as the constructor name.
   If `name_or_opts` is a keyword list, `name_or_opts[:name]` will be
   used as the constructor name.
+
   By default, `:new` is used.
 
   Additional options in `name_or_opts` are stored in the
