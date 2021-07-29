@@ -166,6 +166,14 @@ defmodule ExConstructorTest do
 
       assert(String.match?(ex.message, ~r"^argument must be"))
     end
+
+    it "does not crash if @enforce_keys exists" do
+      defmodule TestStruct7 do
+        @enforce_keys :field
+        defstruct field: 1
+        use ExConstructor
+      end
+    end
   end
 
   context "options" do
