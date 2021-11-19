@@ -4,7 +4,7 @@ defmodule ExConstructor.Mixfile do
   def project do
     [
       app: :exconstructor,
-      version: "1.2.4",
+      version: "1.2.5",
       description: description(),
       package: package(),
       elixir: "~> 1.2",
@@ -40,9 +40,9 @@ defmodule ExConstructor.Mixfile do
   defp deps do
     [
       {:ex_spec, "~> 2.0.1", only: :test},
-      {:excoveralls, "~> 0.13", only: :test},
-      {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.24", only: :dev},
+      {:excoveralls, "~> 0.14", only: :test},
+      {:earmark, "~> 1.4", only: :dev},
+      {:ex_doc, "~> 0.25", only: :dev},
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false}
     ]
   end
