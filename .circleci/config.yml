@@ -4,7 +4,7 @@ jobs:
   build:
     parallelism: 1
     docker:
-      - image: cimg/elixir:1.13
+      - image: cimg/elixir:1.14
         environment:
           MIX_ENV: test
 
