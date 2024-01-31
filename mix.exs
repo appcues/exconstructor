@@ -7,7 +7,7 @@ defmodule ExConstructor.Mixfile do
       version: "1.2.11",
       description: description(),
       package: package(),
-      elixir: "~> 1.2",
+      elixir: "~> 1.12",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       docs: [main: ExConstructor],
