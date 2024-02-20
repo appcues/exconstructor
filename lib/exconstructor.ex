@@ -225,6 +225,6 @@ defmodule ExConstructor do
   @spec lcfirst(String.t()) :: String.t()
   defp lcfirst(str) do
     first = String.slice(str, 0..0) |> String.downcase()
-    first <> String.slice(str, 1..-1)
+    first <> String.slice(str, 1..-1//1)
   end
 end
