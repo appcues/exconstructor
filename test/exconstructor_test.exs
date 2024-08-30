@@ -125,30 +125,33 @@ defmodule ExConstructorTest do
       ExConstructor.__using__()
     end
 
-      test "ExConstructor.define_constructor - uses the default constructor name" do
-        assert(nil != TestStruct1.new(%{}))
-      end
+    test "ExConstructor.define_constructor - uses the default constructor name" do
+      assert(nil != TestStruct1.new(%{}))
+    end
 
-      test "use ExConstructor - uses the default constructor name" do
-        assert(nil != TestStruct2.new(%{}))
-      end
+    test "use ExConstructor - uses the default constructor name" do
+      assert(nil != TestStruct2.new(%{}))
+    end
 
     # test "use ExConstructor, :constructor_name" do
-      test "use ExConstructor, :constructor_name - uses the given constructor name" do
-        assert(nil != TestStruct3.make(%{}))
-      end
+    test "use ExConstructor, :constructor_name - uses the given constructor name" do
+      assert(nil != TestStruct3.make(%{}))
+    end
+
     # end
 
     # test "use ExConstructor, name: :constructor_name" do
-      test "use ExConstructor, name: :constructor_name - uses the given constructor name" do
-        assert(nil != TestStruct4.build(%{}))
-      end
+    test "use ExConstructor, name: :constructor_name - uses the given constructor name" do
+      assert(nil != TestStruct4.build(%{}))
+    end
+
     # end
 
     # test "ExConstructor.__using__" do
-      test "ExConstructor.__using__ - uses the default constructor name" do
-        assert(nil != TestStruct5.new(%{}))
-      end
+    test "ExConstructor.__using__ - uses the default constructor name" do
+      assert(nil != TestStruct5.new(%{}))
+    end
+
     # end
 
     test "raises exception on bad invocation" do
