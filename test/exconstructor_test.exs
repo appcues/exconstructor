@@ -1,5 +1,5 @@
 defmodule ExConstructorTest do
-  use ExSpec, async: true
+  use ExUnit.Case, async: true
   doctest ExConstructor
 
   defmodule TestStruct do
@@ -16,10 +16,10 @@ defmodule ExConstructorTest do
     use ExConstructor
   end
 
-  context "populate_struct" do
+  describe "populate_struct" do
     import ExConstructor
 
-    it "handles maps with string-vs-atom, camel-vs-underscore, and literals" do
+    test "handles maps with string-vs-atom, camel-vs-underscore, and literals" do
       map = %{
         "field_one" => "a",
         "fieldTwo" => "b",
@@ -46,7 +46,7 @@ defmodule ExConstructorTest do
       assert(struct == populate_struct(%TestStruct{}, map, []))
     end
 
-    it "handles keyword lists" do
+    test "handles keyword lists" do
       kwlist = [{:field_one, "a"}, {"field_two", "b"}]
 
       struct = %TestStruct{
@@ -64,7 +64,7 @@ defmodule ExConstructorTest do
       assert(struct == populate_struct(%TestStruct{}, kwlist, []))
     end
 
-    it "converts opts into %Options{}" do
+    test "converts opts into %Options{}" do
       ts =
         populate_struct(
           %TestStruct{},
@@ -76,7 +76,7 @@ defmodule ExConstructorTest do
       assert(22 == ts.field_two)
     end
 
-    it "defaults to %Options{} when none given" do
+    test "defaults to %Options{} when none given" do
       ts =
         populate_struct(
           %TestStruct{},
@@ -87,7 +87,7 @@ defmodule ExConstructorTest do
       assert(22 == ts.field_two)
     end
 
-    it "blows up on bad input" do
+    test "blows up on bad input" do
       ex = assert_raise(RuntimeError, fn -> populate_struct(:omg, %{}, []) end)
       assert(String.match?(ex.message, ~r"first argument"))
 
@@ -99,7 +99,7 @@ defmodule ExConstructorTest do
     end
   end
 
-  context "invocation styles" do
+  describe "invocation styles" do
     defmodule TestStruct1 do
       defstruct field: nil
       ExConstructor.define_constructor()
@@ -125,37 +125,36 @@ defmodule ExConstructorTest do
       ExConstructor.__using__()
     end
 
-    context "ExConstructor.define_constructor" do
-      it "uses the default constructor name" do
-        assert(nil != TestStruct1.new(%{}))
-      end
+    test "ExConstructor.define_constructor - uses the default constructor name" do
+      assert(nil != TestStruct1.new(%{}))
     end
 
-    context "use ExConstructor" do
-      it "uses the default constructor name" do
-        assert(nil != TestStruct2.new(%{}))
-      end
+    test "use ExConstructor - uses the default constructor name" do
+      assert(nil != TestStruct2.new(%{}))
     end
 
-    context "use ExConstructor, :constructor_name" do
-      it "uses the given constructor name" do
-        assert(nil != TestStruct3.make(%{}))
-      end
+    # test "use ExConstructor, :constructor_name" do
+    test "use ExConstructor, :constructor_name - uses the given constructor name" do
+      assert(nil != TestStruct3.make(%{}))
     end
 
-    context "use ExConstructor, name: :constructor_name" do
-      it "uses the given constructor name" do
-        assert(nil != TestStruct4.build(%{}))
-      end
+    # end
+
+    # test "use ExConstructor, name: :constructor_name" do
+    test "use ExConstructor, name: :constructor_name - uses the given constructor name" do
+      assert(nil != TestStruct4.build(%{}))
     end
 
-    context "ExConstructor.__using__" do
-      it "uses the default constructor name" do
-        assert(nil != TestStruct5.new(%{}))
-      end
+    # end
+
+    # test "ExConstructor.__using__" do
+    test "ExConstructor.__using__ - uses the default constructor name" do
+      assert(nil != TestStruct5.new(%{}))
     end
 
-    it "raises exception on bad invocation" do
+    # end
+
+    test "raises exception on bad invocation" do
       ex =
         assert_raise(RuntimeError, fn ->
           defmodule TestStruct6 do
@@ -167,7 +166,7 @@ defmodule ExConstructorTest do
       assert(String.match?(ex.message, ~r"^argument must be"))
     end
 
-    it "does not crash if @enforce_keys exists" do
+    test "does not crash if @enforce_keys exists" do
       defmodule TestStruct7 do
         @enforce_keys :field
         defstruct field: 1
@@ -176,7 +175,7 @@ defmodule ExConstructorTest do
     end
   end
 
-  context "options" do
+  describe "options" do
     defmodule TestStructNoStrings do
       defstruct foo: 1
       use ExConstructor, strings: false
@@ -202,42 +201,42 @@ defmodule ExConstructorTest do
       use ExConstructor, underscore: false
     end
 
-    it "supports strings: false" do
+    test "supports strings: false" do
       ts_map = TestStructNoStrings.new(%{"foo" => 2})
       assert(1 == ts_map.foo)
       ts_kwlist = TestStructNoStrings.new([{"foo", 2}])
       assert(1 == ts_kwlist.foo)
     end
 
-    it "supports atoms: false" do
+    test "supports atoms: false" do
       ts_map = TestStructNoAtoms.new(%{:foo => 2})
       assert(1 == ts_map.foo)
       ts_kwlist = TestStructNoAtoms.new([{:foo, 2}])
       assert(1 == ts_kwlist.foo)
     end
 
-    it "supports camelcase: false" do
+    test "supports camelcase: false" do
       ts_map = TestStructNoCamel.new(%{:fooBar => 2})
       assert(1 == ts_map.foo_bar)
       ts_kwlist = TestStructNoCamel.new([{"fooBar", 2}])
       assert(1 == ts_kwlist.foo_bar)
     end
 
-    it "supports uppercamelcase: false" do
+    test "supports uppercamelcase: false" do
       ts_map = TestStructNoUpperCamel.new(%{:FooBar => 2})
       assert(1 == ts_map.foo_bar)
       ts_kwlist = TestStructNoUpperCamel.new([{"FooBar", 2}])
       assert(1 == ts_kwlist.foo_bar)
     end
 
-    it "supports underscore: false" do
+    test "supports underscore: false" do
       ts_map = TestStructNoUnder.new(%{:foo_bar => 2})
       assert(1 == ts_map.fooBar)
       ts_kwlist = TestStructNoUnder.new([{"foo_bar", 2}])
       assert(1 == ts_kwlist.fooBar)
     end
 
-    it "supports overrides" do
+    test "supports overrides" do
       ts_map = TestStructNoStrings.new(%{"foo" => 2})
       assert(1 == ts_map.foo)
       ts_map = TestStructNoStrings.new(%{"foo" => 2}, strings: true)
@@ -245,7 +244,7 @@ defmodule ExConstructorTest do
     end
   end
 
-  context "overriding" do
+  describe "overriding" do
     defmodule TestStructOverrideNew do
       defstruct [:name]
       use ExConstructor
@@ -256,7 +255,7 @@ defmodule ExConstructorTest do
       end
     end
 
-    it "can override new and call super" do
+    test "can override new and call super" do
       ts_map = TestStructOverrideNew.new(%{"name" => "jim"})
       assert("Jim" == ts_map.name)
     end
