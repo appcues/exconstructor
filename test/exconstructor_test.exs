@@ -133,26 +133,17 @@ defmodule ExConstructorTest do
       assert(nil != TestStruct2.new(%{}))
     end
 
-    # test "use ExConstructor, :constructor_name" do
     test "use ExConstructor, :constructor_name - uses the given constructor name" do
       assert(nil != TestStruct3.make(%{}))
     end
 
-    # end
-
-    # test "use ExConstructor, name: :constructor_name" do
     test "use ExConstructor, name: :constructor_name - uses the given constructor name" do
       assert(nil != TestStruct4.build(%{}))
     end
 
-    # end
-
-    # test "ExConstructor.__using__" do
     test "ExConstructor.__using__ - uses the default constructor name" do
       assert(nil != TestStruct5.new(%{}))
     end
-
-    # end
 
     test "raises exception on bad invocation" do
       ex =
