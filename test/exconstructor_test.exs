@@ -164,6 +164,15 @@ defmodule ExConstructorTest do
         use ExConstructor
       end
     end
+
+    defmodule TestStruct8 do
+      use ExConstructor
+      defstruct field: nil
+    end
+
+    test "use ExConstructor before defstruct - uses the default constructor name" do
+      assert(nil != TestStruct8.new(%{}))
+    end
   end
 
   describe "options" do
