@@ -25,11 +25,11 @@ defmodule ExConstructor do
   Example:
 
       defmodule TestStruct do
+        use ExConstructor
         defstruct field_one: 1,
                   field_two: 2,
                   field_three: 3,
                   field_four: 4,
-        use ExConstructor
       end
 
       TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :FieldFour => "d"})
@@ -105,17 +105,26 @@ defmodule ExConstructor do
     constructor_name = opts[:name] || :new
 
     quote do
-      @exconstructor_default_options unquote(opts)
+      @before_compile unquote(__MODULE__)
       @spec unquote(constructor_name)(ExConstructor.map_or_kwlist(), Keyword.t()) :: %__MODULE__{}
       def unquote(constructor_name)(map_or_kwlist, opts \\ []) do
+        __exconstructor_new__(map_or_kwlist, opts)
+      end
+
+      @exconstructor_default_options unquote(opts)
+      defoverridable [{unquote(constructor_name), 1}, {unquote(constructor_name), 2}]
+    end
+  end
+
+  defmacro __before_compile__(_env) do
+    quote do
+      defp __exconstructor_new__(map_or_kwlist, opts \\ []) do
         ExConstructor.populate_struct(
           struct(__MODULE__, []),
           map_or_kwlist,
           Keyword.merge(@exconstructor_default_options, opts)
         )
       end
-
-      defoverridable [{unquote(constructor_name), 1}, {unquote(constructor_name), 2}]
     end
   end
 

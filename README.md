@@ -20,11 +20,11 @@ parts of your program.
 
 ```elixir
 defmodule TestStruct do
+  use ExConstructor
   defstruct field_one: nil,
             field_two: nil,
             field_three: nil,
             field_four: nil
-  use ExConstructor
 end
 
 TestStruct.new(%{"field_one" => "a", "fieldTwo" => "b", :field_three => "c", :FieldFour => "d"})
