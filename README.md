@@ -62,7 +62,7 @@ test case, etc.) and I will be much quicker in resolving the issue.
 
 ## Authorship and License
 
-ExConstructor is copyright 2016-2021 Appcues, Inc.
+ExConstructor is copyright 2016-2025 Appcues, Inc.
 
 ExConstructor is released under the
 [MIT License](https://github.com/appcues/exconstructor/blob/master/LICENSE.txt).
