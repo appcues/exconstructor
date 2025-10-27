@@ -44,6 +44,7 @@ Many thanks to those who've contributed to ExConstructor:
 * Graeme Coupar ([@grambo](https://github.com/grambo))
 * Mel Kicchi ([@meowy](https://github.com/meowy))
 * Andrey Ronin ([@anronin](https://github.com/anronin))
+* Eugene ([@txssu](https://github.com/txssu))
 
 
 ## How to Contribute
