@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+Allow for `use ExConstructor` to be used before `defstruct`
+Thanks, [@txssu](https://github.com/txssu)!
+
+## 1.2.x
+
 ## 1.1.0
 
 Support `UpperCamelCase` keys.

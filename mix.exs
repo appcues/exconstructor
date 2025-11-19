@@ -4,7 +4,7 @@ defmodule ExConstructor.Mixfile do
   def project do
     [
       app: :exconstructor,
-      version: "1.2.19",
+      version: "1.3.0",
       description: description(),
       package: package(),
       elixir: "~> 1.18",
@@ -27,7 +27,7 @@ defmodule ExConstructor.Mixfile do
 
   def package do
     [
-      maintainers: ["pete gamache", "Appcues"],
+      maintainers: ["Appcues"],
       licenses: ["MIT"],
       links: %{GitHub: "https://github.com/appcues/exconstructor"}
     ]
