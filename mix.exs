@@ -4,7 +4,7 @@ defmodule ExConstructor.Mixfile do
   def project do
     [
       app: :exconstructor,
-      version: "1.3.2",
+      version: "1.3.3",
       description: description(),
       package: package(),
       elixir: "~> 1.18",
