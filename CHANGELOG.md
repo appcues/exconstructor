@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.3.4
+Update dependencies (ex_doc 0.40.3, earmark 1.4.49).
 ## 1.3.0
 Allow for `use ExConstructor` to be used before `defstruct`
 Thanks, [@txssu](https://github.com/txssu)!
