@@ -79,9 +79,9 @@ defmodule ExConstructor do
   Keys of `map_or_kwlist` may be strings or atoms, in camelCase or
   under_score format.
 
-  `opts` may contain keys `strings`, `atoms`, `camelcase` and `underscore`.
-  Set these keys false to prevent testing of that key format in
-  `map_or_kwlist`.  All default to `true`.
+  `opts` may contain keys `strings`, `atoms`, `camelcase`,
+  `uppercamelcase` and `underscore`. Set these keys false to prevent testing
+  of that key format in `map_or_kwlist`. All default to `true`.
 
   For the default name `:new`, the constructor's definition looks like:
 
